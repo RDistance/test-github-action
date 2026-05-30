@@ -1,0 +1,19 @@
+server {
+    listen 80;
+    server_name www.nexvo.me;
+
+    return 301 https://nexvo.me$request_uri;
+}
+
+server {
+    listen 80;
+    # 👇 就是这里！前面必须加上 server_name
+    server_name nexvo.me www.nexvo.me; 
+
+    root /var/www/vue-project/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
