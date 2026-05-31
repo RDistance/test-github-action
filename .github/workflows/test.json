@@ -1,19 +1,74 @@
+
 server {
     listen 80;
     server_name www.nexvo.me;
 
-    return 301 https://nexvo.me$request_uri;
+    return 301 http://nexvo.me$request_uri;
 }
+
+
+
+
+
 
 server {
     listen 80;
-    # 👇 就是这里！前面必须加上 server_name
-    server_name nexvo.me www.nexvo.me; 
+    server_name blog.nexvo.me;
+    # 将 HTTP 自动跳转到 HTTPS
+    return 301 https://$host$request_uri;
+}
 
-    root /var/www/vue-project/dist;
-    index index.html;
+server {
+    server_name blog.nexvo.me;
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/nexvo.me/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/nexvo.me/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+    root /var/www/html;
+    index index.html index.htm;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ =404;
     }
+}
+
+server {
+    server_name www.nexvo.me;
+
+    return 301 http://nexvo.me$request_uri;
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/nexvo.me/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/nexvo.me/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = nexvo.me) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name nexvo.me;
+    return 404; # managed by Certbot
+
+
+}
+
+server {
+    if ($host = www.nexvo.me) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name www.nexvo.me;
+    return 404; # managed by Certbot
+
+
 }

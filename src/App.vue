@@ -1,6 +1,7 @@
 <template>
   <div class="blog">
     <article>
+      <h1>2026年5月31号</h1>
       <h1>使用 GitHub Actions 自动将 Vue 3 纯前端项目部署到阿里云服务器</h1>
       <p>本文介绍如何通过 GitHub Actions 自动化流程，将 Vue 3 前端项目构建并部署到阿里云服务器。整个方案适用于纯前端项目，不依赖后端服务。</p>
 
